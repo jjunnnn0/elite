@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+// ë²Œì§‘ì´ í˜•ì„±ë˜ëŠ” ê·œì¹™ ì°¾ê¸°
 int main(void) {
 	int N;
 	scanf("%d", &N);
@@ -7,7 +7,7 @@ int main(void) {
 	int sum = 1, n = 0;
 	while(1){
 		n++;
-		sum += (n - 1)*d; // ´©Àû? µîÂ÷¼ö¿­
+		sum += (n - 1)*d; // Â´Â©Ã€Ã»? ÂµÃ®Ã‚Ã·Â¼Ã¶Â¿Â­
 		if (N <= sum) {
 			printf("%d\n", n);
 			return 0;
