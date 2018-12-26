@@ -1,3 +1,3 @@
-My first time on git
+ï»¿My first time on git
 modified
-ÇÑ±ÛÀÌ µÇ³ª?
+í•œê¸€ì´ ë˜ë‚˜?
