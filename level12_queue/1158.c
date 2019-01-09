@@ -1,67 +1,76 @@
-﻿#include <stdio.h>
+﻿// 11866 && 1158
+// 문제: 조세퍼스 문제 Joshepus problem
+#include <stdio.h>
 #include <stdlib.h>
-#define MAX 1000
 
-int queue[MAX];
-int front = 0, rear = 0;
+typedef struct _node {
+	int key;
+	struct _node *next;
+	struct _node *prev;
+}node;
 
-int push(int X) {
-	/*if ((rear + 1) % MAX == front) {
-		printf("queue OVERFLOW!!\n");
-		return -1;
-	}*/
-	queue[rear] = X;
-	rear = (rear + 1) % MAX;
-	return X;
+node *head,*tail;
+
+void init_queue(int n) {
+	head = (node*)calloc(1, sizeof(node));
+	tail = (node*)calloc(1, sizeof(node));
+
+	head->prev = head;
+	head->next = tail;
+	tail->prev = head;
+	tail->next = tail;
 }
 
-int pop() {
+void enqueue(int k) {
+	node *t = (node*)calloc(1, sizeof(node));
+	t->key = k;
+	t->next = head->next;
+	head->next->prev = t;
+	t->prev = head;
+	head->next = t;
+}
+
+int dequeue() {
+	node *t;
 	int k;
-	/*if (front == rear) {
-		printf("queue UNDERFLOW!!\n");
-		return -1;
-	}*/
-	k = queue[front];
-	queue[front] = 0;
-	front = ++front % MAX;
+	if (tail->prev == head) return -1;
+	t = tail->prev;		
+	k = t->key;
+	t->prev->next = tail;
+	tail->prev = t->prev;
+	free(t);
 	return k;
 }
 
+int size() {
+	node *t;
+	int count = 0;
+	t = head;
+	while (t->next != tail) {
+		t = t->next;
+		count++;
+	}
+	return count;
+}
+
 int main(void) {
-	int N = 0, M = 0;
-	int count = 0, k = 0;
-	scanf("%d %d", &N, &M); // N : 사람 수, M : M번째 사람 수
-	
-	int *result = (int*)calloc(N, sizeof(int));
-
+	int N = 0, M = 0; // N: 사람수, M: interval
+	scanf("%d %d", &N, &M);
+		
+	init_queue(N);
 	for (int i = 1; i <= N; i++) {
-		printf("%d ",push(i));
+		enqueue(i);		
 	}
-	printf("\n");
 
-	/*for (int i = 0; i < N; i++) {
-		printf("%d ", queue[i]);
-	}
-	printf("\n");*/
-
-	for (int i = 0; i < N; i++) {
-		count = 0;
-		for (int j = 0; j < M + count - 1; j++) {
-			if (queue[j] == 0) {
-				count++;
-			}
-			front = ++front % N;
-			if (front >= N) front -= N;
-		}
-		//k = front;
-		result[i] = pop();
-	}
 	printf("<");
-	for (int i = 0; i < N; i++) {
-		printf("%d", result[i]);
-		if (i != N - 1) printf(", ");
+	while (size() != 1) {
+		for (int i = 0; i < M - 1; i++) {
+			enqueue(dequeue());
+		}
+		printf("%d, ", dequeue());		
 	}
-	printf(">");
+	printf("%d>\n",dequeue());
 
 	return 0;
 }
+// circular로 하는건 실패. 직선 queue도 어렵게 성공
