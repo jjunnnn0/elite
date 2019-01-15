@@ -76,24 +76,24 @@ void print_queue() {
 int main(void) {
 	int m, n;
 	cin >> m >> n;
-	int *check = (int*)calloc(m*n, sizeof(int));
+	int *check = (int*)calloc(m*n+1, sizeof(int));
 	int *graph = (int*)calloc(m*n, sizeof(int));
 	vector<int> edge[1001];
 	int numof1s = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			cin >> check[i*m + j]; //토마토 상태는 check로
+			cin >> check[i*m + j + 1]; //토마토 상태는 check로
 			graph[i*m + j] = i * m + j + 1;
-			if (check[i*m + j] == 1) numof1s++;// 익은 토마토 세기
+			if (check[i*m + j + 1] == 1) numof1s++;// 익은 토마토 세기
 		}
 	}
 	// 토마토 상태 잘 들어갔나 확인
-	/*for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			cout<< check[i*m + j]<<' ';
+			cout << check[i*m + j + 1] << ' ';
 		}
 		cout << '\n';
-	}*/
+	}
 	for (int y = 0; y < n; y++) {
 		for (int x = 0; x < m; x++) {
 			int now = y * m + x + 1;
@@ -104,39 +104,48 @@ int main(void) {
 		}
 	}
 	// edge들이 잘 들어갔나 확인
-	for (int i = 1; i <= m*n; i++) {
+	/*for (int i = 1; i <= m*n; i++) {
 		cout << i << ' ';
 		for (int j = 0; j < edge[i].size(); j++) {
 			cout << edge[i][j] << ' ';
 		}
 		cout << '\n';
-	}
+	}*/
 
 	init_queue();
 	int count = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			if (check[i*m + j] == 1) {
+			if (check[i*m + j + 1] == 1) {
 				enqueue(graph[i*m + j]);
-				cout << "enqueue " << graph[i*m + j] << '\n';
+				//cout << "enqueue " << graph[i*m + j] << '\n';
 			}
 		}
 	}
 	//print_queue();
-	cout << "1의개수: " << numof1s << '\n';
+	//cout << "1의개수: " << numof1s << '\n';
+
 	while (!isempty()) {
 		for (int i = 0; i < numof1s; i++) {
 			int now = front();
 			dequeue();
-			cout << now << ' ';
+			//cout << now << ' ';
 			int num = edge[now].size();
 			for (int j = 0; j < num; j++) {
 				int next = edge[now][j];
 				if (check[next] == 0) {
 					enqueue(next);
+					//cout << "enqueue " << next << '\n';
 					check[next] = 1;
 				}
 			}			
+		}
+		cout << '\n';
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				cout << check[i*m + j + 1] << ' ';
+			}
+			cout << '\n';
 		}
 		count++;
 	}
@@ -144,12 +153,14 @@ int main(void) {
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			cout<< check[i*m + j]<<' ';
+			if (check[i*m + j + 1] == 0) { // 다 안익었으면 -1
+				cout << -1;
+				return 0;
+			}
+			cout << check[i*m + j + 1] << ' ';
 		}
 		cout << '\n';
 	}
-
-
 	cout << count;
 
 	return 0;
