@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <math.h>
 
 using namespace std;
 
@@ -75,17 +76,24 @@ void print_queue() {
 
 int main(void) {
 	int m, n;
-	cin >> m >> n;
+	cin >> n >> m;
+	char input[101];
 	int *check = (int*)calloc(m*n+1, sizeof(int));
 	int *graph = (int*)calloc(m*n, sizeof(int));
 	vector<int> edge[1001];
 	
 	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cin >> check[i*m + j + 1]; 
-			graph[i*m + j] = i * m + j + 1;			
+		cin >> input;
+		
+		for (int j = 0; j < m ; j++) {
+			char digit[1];
+			digit[0]=input[j];
+			check[i*m + j + 1] = atoi(digit);
+			//cout << check[i*m + j + 1];
+			graph[i*m + j] = i * m + j + 1;
 		}
 	}
+	
 	// 미로 잘 들어갔나 확인
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
